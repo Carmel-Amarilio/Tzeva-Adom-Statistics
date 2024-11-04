@@ -1,0 +1,26 @@
+// Setup
+@import "setup/variables";
+@import "setup/functions";
+@import "setup/mixins";
+@import "setup/typography";
+
+// Basics
+@import "basics/helpers";
+@import "basics/layout";
+@import "basics/base";
+@import "basics/links";
+@import "basics/forms";
+
+
+// Views
+@import "views/Home";
+@import "views/TzevaAdomIndex.scss";
+
+
+// Components
+@import "cmps/FilterBy.scss";
+@import "cmps/TzevaAdomMap.scss";
+@import "cmps/TzevaAdomTable.scss";
+@import "cmps/TzevaAdomChart.scss";
+@import "cmps/CityChart.scss";
+@import "cmps/Loader.scss";

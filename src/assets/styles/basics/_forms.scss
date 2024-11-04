@@ -1,0 +1,41 @@
+button {
+    border: 0;
+    background-color: $clr1;
+    color: whitesmoke;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+form>* {
+    display: block;
+    width: 200px;
+    margin: 10px 0px;
+}
+
+.btn-link {
+    border: 0;
+    background-color: transparent;
+    text-decoration: underline;
+    transition: .5s;
+}
+
+.btn-link:hover {
+    background-color: $clr1;
+    transform: scale(1.1);
+}
+
+.exit-btn {
+    position: absolute;
+    z-index: 10;
+    top: 0;
+    inset-inline-end: 0px;
+    font-size: 16px;
+    background-color: #FF0000;
+    color: #FFFFFF;
+    padding: 5px 7px;
+    border-radius: 0;
+
+    &:hover {
+        background-color: #B22222;
+    }
+}

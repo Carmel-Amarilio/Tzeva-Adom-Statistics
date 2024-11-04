@@ -1,0 +1,33 @@
+.tzeva-adom-map {
+    position: relative;
+
+    .alerts-amounts {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: $prime-clr;
+        color: white;
+        padding: 10px;
+        font-size: 14px;
+        border-radius: 2em;
+        cursor: pointer;
+    }
+
+    .last-day-btn {
+        position: absolute;
+        background-color: $prime-clr;
+        top: 20px;
+        left: 10px;
+        z-index: 1000;
+        font-size: 20px;
+        border-radius: 10px;
+    }
+
+    .loader {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+}

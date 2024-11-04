@@ -1,0 +1,45 @@
+.tzeva-adom-index {
+    display: grid;
+    grid-template-columns: 360px 1fr 5px;
+    grid-template-rows: 99vh;
+    gap: 5px 10px;
+    transition: grid-template-columns 0.5s ease;
+    overflow-y: auto;
+    scrollbar-width: none;
+    max-height: 100%;
+    overflow-y: hidden;
+    direction: ltr;
+
+    &.sidebar-show {
+        grid-template-columns: 340px 1fr 10px;
+    }
+
+    // .filter-by {
+    //     position: relative;
+    //     grid-column: 1;
+    //     grid-row: 3;
+    //     height: 95%;
+    //     padding-inline: 0px 20px;
+    //     width: 340px;
+    //     transition: left 0.5s ease;
+    //     inset-inline-start: -320px;
+    //     background-color: white;
+    //     overflow-y: hidden;
+    //     z-index: 5;
+
+    //     &.show {
+    //         inset-inline-start: 0px;
+    //     }
+    // }
+
+    &:last-child {
+        grid-column: 2;
+        grid-row: 3;
+    }
+
+    @include for-normal-layout {
+        &.sidebar-show {
+            grid-template-columns: 20px 1fr 10px;
+        }
+    }
+}
