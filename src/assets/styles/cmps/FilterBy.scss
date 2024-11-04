@@ -1,9 +1,27 @@
 .filter-by {
-    padding: 20px 0px 20px 20px;
+    position: relative;
+    padding: 40px 0px 20px 10px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    // background-color: #dadada;
-    // color: white;
+    z-index: 3;
+    background-color: #fff;
+    height: 100%;
+
+
+    .close-btn {
+        position: absolute;
+        top: 5px;
+        right: 30px;
+        width: 30px;
+        height: 30px;
+        inset-inline-end: 0px;
+        font-size: 1.3em;
+        background-color: lightgray;
+        border-radius: 0;
+        padding: 5px;
+        z-index: 100;
+        display: none;
+    }
 
     .nav-sec {
         button {
@@ -135,5 +153,21 @@
                 }
             }
         }
+    }
+
+    @include for-normal-layout {
+        position: absolute;
+        left: -345px;
+
+        &.show {
+            left: 0px;
+        }
+
+        .close-btn {
+            display: block;
+            position: absolute;
+            right: -30px;
+        }
+
     }
 }

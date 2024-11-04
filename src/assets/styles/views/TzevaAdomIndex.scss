@@ -14,23 +14,6 @@
         grid-template-columns: 340px 1fr 10px;
     }
 
-    // .filter-by {
-    //     position: relative;
-    //     grid-column: 1;
-    //     grid-row: 3;
-    //     height: 95%;
-    //     padding-inline: 0px 20px;
-    //     width: 340px;
-    //     transition: left 0.5s ease;
-    //     inset-inline-start: -320px;
-    //     background-color: white;
-    //     overflow-y: hidden;
-    //     z-index: 5;
-
-    //     &.show {
-    //         inset-inline-start: 0px;
-    //     }
-    // }
 
     &:last-child {
         grid-column: 2;
@@ -38,8 +21,7 @@
     }
 
     @include for-normal-layout {
-        &.sidebar-show {
-            grid-template-columns: 20px 1fr 10px;
-        }
+        grid-template-columns: 1fr 5px;
+        padding-inline-start: 30px;
     }
 }

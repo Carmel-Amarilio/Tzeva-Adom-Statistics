@@ -11,6 +11,7 @@ interface prop {
 
 export function FilterBy({ filterBy, setFilterBy, setNav }: prop) {
     const { cityName, alertsAmounts, startDate, endDate, threatSelect } = filterBy
+    const [isSideBar, setIsSideBar] = useState<boolean>(true)
 
     function handleChange(ev: React.ChangeEvent<HTMLInputElement>) {
         const { name, value }: { name: string, value: string | number } = ev.target;
@@ -24,7 +25,8 @@ export function FilterBy({ filterBy, setFilterBy, setNav }: prop) {
 
 
     return (
-        <section className="filter-by flex justify-center column gap30">
+        <section className={`filter-by flex column gap30 ${isSideBar ? 'show' : ''}`}>
+            <button onClick={() => setIsSideBar(!isSideBar)} className="close-btn"><i className={`fa-solid fa-angle-${isSideBar ? 'left' : 'right'}`}></i></button>
             <article className="nav-sec flex justify-center column gap10">
                 <button onClick={() => setNav('map')}>Map</button>
                 <button onClick={() => setNav('table')}>Table</button>
