@@ -5,6 +5,7 @@ import jsonData from '../../src/data/tzevaAdom.json';
 export const tzofarService = {
     query,
     get,
+    getByCityName,
     getEmptyFilter
 }
 
@@ -21,6 +22,43 @@ function query(filterBy: Filter): TzevaAdom[] {
 
 function get(tzofarId: number): TzevaAdom {
     return jsonData.find(({ id }) => tzofarId === id)
+}
+
+function getByCityName(cityName: string, filterBy: Filter) {
+    const allTzevaAdom: TzevaAdom[] = query(filterBy)
+    const { startDate, endDate } = filterBy
+    const dataMap = {}
+    const threatMapTep = {}
+
+    utilService.getDateRange(startDate, endDate).forEach(date => {
+        if (!dataMap[date]) dataMap[date] = 0
+    })
+
+    allTzevaAdom.forEach(alert => {
+        alert.alerts.forEach(({ cities, time, threat }) => {
+            if (cities.includes(cityName)) {
+                const date = utilService.getFormDate(time * 1000)
+                if (dataMap[date]) dataMap[date]++
+                else dataMap[date] = 1
+
+                if (threatMapTep[threat]) threatMapTep[threat]++
+                else threatMapTep[threat] = 1
+            }
+        })
+    })
+
+    console.log(dataMap);
+
+
+    let cityData = []
+    for (const key in dataMap) {
+        cityData.push({
+            date: key,
+            alerts: dataMap[key]
+        })
+    }
+
+    return { threatMapTep, cityData }
 }
 
 function getEmptyFilter() {

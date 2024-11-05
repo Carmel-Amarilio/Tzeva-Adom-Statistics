@@ -1,17 +1,19 @@
 import { useEffect, useRef, useState } from 'react'
 import GoogleMapReact from 'google-map-react'
+import { useNavigate } from 'react-router-dom'
+
 import { googleMapApiKey } from '../../keys'
-import { Filter, TzevaAdom } from '../models/models'
+import { CityData, Filter, ThreatMap, TzevaAdom } from '../models/models'
+import { tzofarService } from '../services/tzofar.service'
+
 import { Loader } from './Loader'
 import { CityChart } from './CityChart'
-import { utilService } from '../services/util.service'
 
 
 interface prop {
     cityAlertsMap: { name: string, alertsAmounts: number }[]
-    allTzevaAdom: TzevaAdom[]
-    filterBy: Filter
     onFilterToday: () => void
+    filterBy: Filter
 }
 
 declare global {
@@ -20,19 +22,25 @@ declare global {
     }
 }
 
-export function TzevaAdomMap({ cityAlertsMap, allTzevaAdom, filterBy, onFilterToday }: prop) {
+export function TzevaAdomMap({ cityAlertsMap, onFilterToday, filterBy }: prop) {
     const [cityAlertsMapLoc, setCtyAlertsMapLoc] = useState(null)
-    const [cityChartData, setCityChartData] = useState<{ cityName: string, data: { date: string, alerts: number }[] }>(null)
-    const [threatMap, setThreatMap] = useState(null)
+    const [cityChartData, setCityChartData] = useState<{ cityName: string, cityData: CityData[] }>(null)
+    const [threatMap, setThreatMap] = useState<ThreatMap>(null)
+
+    useEffect(() => {
+        if (cityChartData) onCity(cityChartData.cityName)
+    }, [filterBy])
 
     const latestCallId = useRef(0)
 
-    useEffect(() => {
-        onFilterToday()
-    }, [])
+    // useEffect(() => {
+    //     onFilterToday()
+    // }, [])
 
     useEffect(() => {
-        addLoc()
+        if (window.google && window.google.maps) {
+            addLoc()
+        }
     }, [cityAlertsMap])
 
     const defaultProps = {
@@ -66,9 +74,9 @@ export function TzevaAdomMap({ cityAlertsMap, allTzevaAdom, filterBy, onFilterTo
             }
         } catch (error) {
             console.error("Error in addLoc:", error);
+            setTimeout(addLoc, 1000)
         }
     }
-
 
     async function searchLoc(name: string): Promise<{ lat: number; lng: number } | null> {
         if (!window.google || !window.google.maps) {
@@ -77,49 +85,23 @@ export function TzevaAdomMap({ cityAlertsMap, allTzevaAdom, filterBy, onFilterTo
         }
 
         const geocoder = new window.google.maps.Geocoder();
-
-        return new Promise((resolve, reject) => {
+        return new Promise<{ lat: number, lng: number } | null>((resolve) => {
             geocoder.geocode({ address: name }, (results, status) => {
-                if (status === 'OK' && results && results.length > 0) {
-                    const location = results[0].geometry.location;
-                    resolve({ lat: location.lat(), lng: location.lng() });
+                if (status === "OK" && results && results.length > 0) {
+                    const { lat, lng } = results[0].geometry.location;
+                    resolve({ lat: lat(), lng: lng() });
                 } else {
-                    console.error(`Geocode failed for ${name}: ${status}`)
-                    resolve(null)
+                    console.error("Place not found or Geocode was unsuccessful");
+                    resolve(null);
                 }
             });
         });
     }
 
     function onCity(cityName: string) {
-        const dataMap = {}
-        const threatMapTep = {}
-
-        allTzevaAdom.forEach(alert => {
-            alert.alerts.forEach(({ cities, time, threat }) => {
-                if (cities.includes(cityName)) {
-                    const date = utilService.getFormDate(time * 1000)
-                    if (dataMap[date]) dataMap[date]++
-                    else dataMap[date] = 1
-
-                    if (threatMapTep[threat]) threatMapTep[threat]++
-                    else threatMapTep[threat] = 1
-                }
-            })
-        })
-
+        const { threatMapTep, cityData } = tzofarService.getByCityName(cityName, filterBy)
         setThreatMap(threatMapTep)
-
-        let data = []
-        for (const key in dataMap) {
-            data.push({
-                date: key,
-                alerts: dataMap[key]
-            })
-        }
-        data = data.filter(({ alerts }) => alerts >= filterBy.alertsAmounts)
-        setCityChartData({ cityName, data })
-
+        setCityChartData({ cityName, cityData })
     }
 
     function closeModal() {
@@ -140,15 +122,14 @@ export function TzevaAdomMap({ cityAlertsMap, allTzevaAdom, filterBy, onFilterTo
                 defaultCenter={defaultProps.center}
                 defaultZoom={defaultProps.zoom}
             >
-                {cityAlertsMapLoc &&
-                    cityAlertsMapLoc.map(({ name, alertsAmounts, lat, lng }) =>
-                        <AnyReactComponent
-                            key={name}
-                            lat={lat}
-                            lng={lng}
-                            alertsAmounts={alertsAmounts}
-                            name={name}
-                        />)
+                {cityAlertsMapLoc && cityAlertsMapLoc.map(({ name, alertsAmounts, lat, lng }) =>
+                    <AnyReactComponent
+                        key={name}
+                        lat={lat}
+                        lng={lng}
+                        alertsAmounts={alertsAmounts}
+                        name={name}
+                    />)
                 }
 
             </GoogleMapReact>

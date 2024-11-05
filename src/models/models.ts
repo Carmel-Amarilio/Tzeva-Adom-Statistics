@@ -11,6 +11,17 @@ export interface Alert {
     threat: number,
     isDrill: boolean
 }
+export interface CityData {
+    date: string;
+    alerts: number;
+}
+export interface ThreatMap {
+    0?: number
+    2?: number
+    3?: number
+    5?: number
+
+}
 export interface Filter {
     cityName: string
     alertsAmounts: number

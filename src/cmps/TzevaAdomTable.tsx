@@ -1,18 +1,18 @@
 import { useEffect, useState } from "react"
-import { Filter, TzevaAdom } from "../models/models"
-import { BrushBarChart } from "./Charts/BrushBarChart"
-import { utilService } from "../services/util.service"
+
+import { tzofarService } from "../services/tzofar.service"
+import { CityData, Filter, TzevaAdom } from "../models/models"
+
 import { CityChart } from "./CityChart"
 
 interface prop {
     cityAlertsMap: { name: string, alertsAmounts: number }[]
-    allTzevaAdom: TzevaAdom[]
     filterBy: Filter
 }
 
-export function TzevaAdomTable({ cityAlertsMap, allTzevaAdom, filterBy }: prop) {
+export function TzevaAdomTable({ cityAlertsMap, filterBy }: prop) {
     const [cityAlertsMapDis, setCityAlertsMapDis] = useState<{ name: string, alertsAmounts: number }[]>(cityAlertsMap)
-    const [cityChartData, setCityChartData] = useState<{ cityName: string, data: { date: string, alerts: number }[] }>(null)
+    const [cityChartData, setCityChartData] = useState<{ cityName: string, cityData: CityData[] }>(null)
     const [threatMap, setThreatMap] = useState(null)
 
 
@@ -34,43 +34,15 @@ export function TzevaAdomTable({ cityAlertsMap, allTzevaAdom, filterBy }: prop) 
     }
 
     function onCity(cityName: string) {
-        const dataMap = {}
-        const threatMapTep = {}
-
-        allTzevaAdom.forEach(alert => {
-            alert.alerts.forEach(({ cities, time, threat }) => {
-                if (cities.includes(cityName)) {
-                    const date = utilService.getFormDate(time * 1000)
-                    if (dataMap[date]) dataMap[date]++
-                    else dataMap[date] = 1
-
-                    if (threatMapTep[threat]) threatMapTep[threat]++
-                    else threatMapTep[threat] = 1
-
-                }
-            })
-        })
-
+        const { threatMapTep, cityData } = tzofarService.getByCityName(cityName, filterBy)
         setThreatMap(threatMapTep)
-
-        let data = []
-        for (const key in dataMap) {
-            data.push({
-                date: key,
-                alerts: dataMap[key]
-            })
-        }
-        data = data.filter(({ alerts }) => alerts >= filterBy.alertsAmounts)
-        setCityChartData({ cityName, data })
-
+        setCityChartData({ cityName, cityData })
     }
-
 
     function closeModal() {
         setCityChartData(null)
     }
 
-    console.log(threatMap);
 
     return (
         <section className="tzeva-adom-table flex column gap20">

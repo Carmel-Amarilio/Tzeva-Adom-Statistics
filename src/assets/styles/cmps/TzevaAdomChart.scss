@@ -1,5 +1,5 @@
 .tzeva-adom-chart {
-    // height: 80vh;
+    max-height: 700px;
 
     .statistical {
         display: grid;
@@ -8,5 +8,6 @@
         padding: 10px;
         border: 1px solid $prime-clr;
         border-radius: 10px;
+        text-align: center;
     }
 }

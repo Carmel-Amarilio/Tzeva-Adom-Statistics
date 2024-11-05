@@ -28,9 +28,9 @@ export function FilterBy({ filterBy, setFilterBy, setNav }: prop) {
         <section className={`filter-by flex column gap30 ${isSideBar ? 'show' : ''}`}>
             <button onClick={() => setIsSideBar(!isSideBar)} className="close-btn"><i className={`fa-solid fa-angle-${isSideBar ? 'left' : 'right'}`}></i></button>
             <article className="nav-sec flex justify-center column gap10">
-                <button onClick={() => setNav('map')}>Map</button>
-                <button onClick={() => setNav('table')}>Table</button>
-                <button onClick={() => setNav('chart')}>Chart</button>
+                <button onClick={() => { setNav('table'); setIsSideBar(false) }}>Table</button>
+                <button onClick={() => { setNav('map'); setIsSideBar(false) }}>Map</button>
+                <button onClick={() => { setNav('chart'); setIsSideBar(false) }}>Chart</button>
             </article>
 
             <article className="filter-sec flex column justify-center  gap20">

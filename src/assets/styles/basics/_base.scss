@@ -9,16 +9,18 @@
 
 html {
     font-family: montserrat;
-    line-height: 1.6;
     color: $clr2;
 }
 
 body {
     font-family: Arial, Helvetica, sans-serif;
-    font-size: rem(18px);
+    font-size: rem(16px);
     margin: 0;
     padding: 0px;
-    overflow-x: hidden;
+}
+
+main {
+    overflow: hidden;
 }
 
 

@@ -3,9 +3,10 @@
     padding: 40px 0px 20px 10px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    z-index: 3;
     background-color: #fff;
-    height: 100%;
+    height: 100vh;
+    transition: 300ms;
+    z-index: 3;
 
 
     .close-btn {
@@ -111,33 +112,16 @@
         .multi-select {
             direction: rtl;
             width: 160px;
-            height: 120px;
+            // height: 120px;
             padding: 10px;
             border: 1px solid #d1d1d1;
             border-radius: 8px;
             background-color: #f9f9f9;
-            font-family: Arial, sans-serif;
             font-size: 14px;
             color: #333;
             outline: none;
             cursor: pointer;
-            overflow-y: auto;
-
-            // Customize the scrollbar
-            &::-webkit-scrollbar {
-                width: 8px;
-            }
-
-            &::-webkit-scrollbar-track {
-                background: #f1f1f1;
-                border-radius: 8px;
-            }
-
-            &::-webkit-scrollbar-thumb {
-                background-color: #c4c4c4;
-                border-radius: 8px;
-                border: 2px solid #f9f9f9;
-            }
+            overflow-y: hidden;
 
             option {
                 padding: 8px;
@@ -158,6 +142,7 @@
     @include for-normal-layout {
         position: absolute;
         left: -345px;
+        max-width: 345px;
 
         &.show {
             left: 0px;
