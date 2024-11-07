@@ -81,7 +81,7 @@ export function TzevaAdomIndex(): React.ReactElement {
         <section className="tzeva-adom-index">
             <FilterBy filterBy={filterBy} setFilterBy={setFilterBy} setNav={setNav} nav={nav} />
             {nav === 'table' && <TzevaAdomTable cityAlertsMap={cityAlertsMap} filterBy={filterBy} />}
-            {nav === 'map' && <TzevaAdomMap cityAlertsMap={cityAlertsMap} onFilterToday={onFilterToday} filterBy={filterBy} />}
+            {/* {nav === 'map' && <TzevaAdomMap cityAlertsMap={cityAlertsMap} onFilterToday={onFilterToday} filterBy={filterBy} />} */}
             {nav === 'chart' && <TzevaAdomChart allTzevaAdom={allTzevaAdom} filterBy={filterBy} />}
         </section>
     )
