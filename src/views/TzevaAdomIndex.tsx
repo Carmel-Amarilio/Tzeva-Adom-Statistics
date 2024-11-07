@@ -17,9 +17,9 @@ export function TzevaAdomIndex(): React.ReactElement {
     const [filterBy, setFilterBy] = useState<Filter>(tzofarService.getEmptyFilter())
     const [nav, setNav] = useState<string>('table')
 
-    // const location = useLocation()
-    // const searchParams = new URLSearchParams(location.search)
-    // const navigate = useNavigate();
+    const location = useLocation()
+    const searchParams = new URLSearchParams(location.search)
+    const navigate = useNavigate();
 
     useEffect(() => {
         setAllTzevaAdom(tzofarService.query(filterBy))
@@ -29,24 +29,21 @@ export function TzevaAdomIndex(): React.ReactElement {
         if (allTzevaAdom) setCityAlertsMap(cityMap())
     }, [filterBy, allTzevaAdom])
 
-    // useEffect(() => {
-    //     const labelNav = searchParams.get('nav')
-    //     const cityName = searchParams.get('cityName')
-    //     const alertsAmounts = searchParams.get('alertsAmounts')
-    //     const startDate = searchParams.get('startDate')
-    //     const endDate = searchParams.get('endDate')
-    //     // const threatSelect = searchParams.get('threatSelect')
-    //     console.log('cityName', cityName, labelNav);
-    // }, [location])
+    useEffect(() => {
+        const labelNav = searchParams.get('nav') || 'table';
+        const cityName = searchParams.get('cityName') || '';
+        const alertsAmounts = +searchParams.get('alertsAmounts') || 0;
+        const startDate = searchParams.get('startDate') || '2023-10-07';
+        const endDate = searchParams.get('endDate') || utilService.getFormattedDate();
+        let threatSelect = searchParams.get('threatSelect') ? searchParams.get('threatSelect').split(',') : ['0', '2', '3', '5']
+        setNav(labelNav)
+        setFilterBy({ cityName, alertsAmounts, startDate, endDate, threatSelect });
+    }, []);
 
-    // useEffect(() => {
-    //     const { cityName, alertsAmounts, startDate, endDate, threatSelect } = filterBy
-    //     navigate(`/?nav=${nav}${cityName ? `?cityName=${cityName}` : ''}${alertsAmounts ? `?alertsAmounts=${alertsAmounts}` : ''}
-    //         ${startDate ? `startDate=${startDate}` : ''}
-    //         ${endDate ? `endDate=${endDate}` : ''}
-    //         ${threatSelect ? `threatSelect=${threatSelect}` : ''}`)
-    //     // navigate(`/?nav=${nav} ${cityName ? `cityName=${cityName}` : ''}${threatSelect ? `threatSelect=${threatSelect}` : ''}`)
-    // }, [filterBy, nav])
+    useEffect(() => {
+        const { cityName, alertsAmounts, startDate, endDate, threatSelect } = filterBy;
+        navigate(`/?nav=${nav}${cityName ? `&cityName=${cityName}` : ''}${alertsAmounts ? `&alertsAmounts=${alertsAmounts}` : ''}${startDate ? `&startDate=${startDate}` : ''}${endDate ? `&endDate=${endDate}` : ''}${threatSelect ? `&threatSelect=${threatSelect}` : ''}`);
+    }, [filterBy, nav]);
 
     function cityMap(): { name: string, alertsAmounts: number }[] {
         const cityMap = {}
@@ -82,7 +79,7 @@ export function TzevaAdomIndex(): React.ReactElement {
     if (!allTzevaAdom || !cityAlertsMap) return <Loader isBG={true} />
     return (
         <section className="tzeva-adom-index">
-            <FilterBy filterBy={filterBy} setFilterBy={setFilterBy} setNav={setNav} />
+            <FilterBy filterBy={filterBy} setFilterBy={setFilterBy} setNav={setNav} nav={nav} />
             {nav === 'table' && <TzevaAdomTable cityAlertsMap={cityAlertsMap} filterBy={filterBy} />}
             {nav === 'map' && <TzevaAdomMap cityAlertsMap={cityAlertsMap} onFilterToday={onFilterToday} filterBy={filterBy} />}
             {nav === 'chart' && <TzevaAdomChart allTzevaAdom={allTzevaAdom} filterBy={filterBy} />}

@@ -26,10 +26,11 @@ export function TzevaAdomMap({ cityAlertsMap, onFilterToday, filterBy }: prop) {
     const [cityAlertsMapLoc, setCtyAlertsMapLoc] = useState(null)
     const [cityChartData, setCityChartData] = useState<{ cityName: string, cityData: CityData[] }>(null)
     const [threatMap, setThreatMap] = useState<ThreatMap>(null)
+    const [isByMinute, setIsByMinute] = useState<boolean>(false)
 
     useEffect(() => {
         if (cityChartData) onCity(cityChartData.cityName)
-    }, [filterBy])
+    }, [filterBy, isByMinute])
 
     const latestCallId = useRef(0)
 
@@ -52,29 +53,47 @@ export function TzevaAdomMap({ cityAlertsMap, onFilterToday, filterBy }: prop) {
     }
 
     async function addLoc() {
-        const callId = Date.now()
-        latestCallId.current = callId
+        const callId = Date.now();
+        latestCallId.current = callId;
+        setCtyAlertsMapLoc(null);
 
-        setCtyAlertsMapLoc(null)
+        const batchSize = 100; // Process 10 cities at a time
+        let data: Array<any> = [];
 
-        try {
-            const data = await Promise.all(
-                cityAlertsMap.map(async (city) => {
-                    if (latestCallId.current !== callId) return null;
 
-                    const loc = await searchLoc(city.name);
-                    if (latestCallId.current !== callId) return null;
+        for (let i = 0; i < cityAlertsMap.length; i += batchSize) {
+            if (latestCallId.current !== callId) return;
 
-                    return loc ? { ...city, ...loc } : null;
-                })
-            )
+            const batch = cityAlertsMap.slice(i, i + batchSize);
 
-            if (latestCallId.current === callId) {
-                setCtyAlertsMapLoc(data.filter(Boolean));
+            try {
+                const batchData = await Promise.all(
+                    batch.map(async (city) => {
+                        if (latestCallId.current !== callId) return null;
+
+                        const loc = await searchLoc(city.name);
+                        return loc ? { ...city, ...loc } : null;
+                    })
+                );
+
+                // Filter out null entries from this batch
+                data = [...data, ...batchData.filter(Boolean)];
+
+                // Only update if this is still the latest call
+                if (latestCallId.current === callId) {
+                    setCtyAlertsMapLoc(data);
+                }
+            } catch (error) {
+                console.error("Error in addLoc:", error);
+                // Retry the current batch after a short delay
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                i -= batchSize; // Re-run the current batch
             }
-        } catch (error) {
-            console.error("Error in addLoc:", error);
-            setTimeout(addLoc, 1000)
+        }
+
+        // Final check to ensure all data is set at the end
+        if (latestCallId.current === callId) {
+            setCtyAlertsMapLoc(data);
         }
     }
 
@@ -99,19 +118,24 @@ export function TzevaAdomMap({ cityAlertsMap, onFilterToday, filterBy }: prop) {
     }
 
     function onCity(cityName: string) {
-        const { threatMapTep, cityData } = tzofarService.getByCityName(cityName, filterBy)
+        const { threatMapTep, cityData } = tzofarService.getByCityName(cityName, filterBy, isByMinute)
         setThreatMap(threatMapTep)
         setCityChartData({ cityName, cityData })
     }
 
+    function handleChangeIsByMinute(ev: React.ChangeEvent<HTMLInputElement>) {
+        setIsByMinute(ev.target.checked)
+    }
+
     function closeModal() {
         setCityChartData(null)
+        setIsByMinute(false)
     }
 
 
     const AnyReactComponent = ({ alertsAmounts, name }) =>
-        <div className='alerts-amounts'>
-            <p onClick={() => onCity(name)}>{alertsAmounts}</p>
+        <div className='alerts-amounts' onClick={() => onCity(name)} title={name}>
+            <p>{alertsAmounts}</p>
         </div>
 
 
@@ -134,9 +158,9 @@ export function TzevaAdomMap({ cityAlertsMap, onFilterToday, filterBy }: prop) {
 
             </GoogleMapReact>
             {!cityAlertsMapLoc && <Loader />}
-            {cityChartData && <CityChart cityChartData={cityChartData} closeModal={closeModal} threatMap={threatMap} />}
+            {cityChartData && <CityChart cityChartData={cityChartData} closeModal={closeModal} threatMap={threatMap} handleChangeIsByMinute={handleChangeIsByMinute} isByMinute={isByMinute} />}
 
-            <button onClick={onFilterToday} className='last-day-btn'>Last 24h</button>
+            <button onClick={onFilterToday} className={`last-day-btn`}>Last 24h</button>
         </section>
     )
 }

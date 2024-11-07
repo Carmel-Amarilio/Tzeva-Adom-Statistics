@@ -7,9 +7,10 @@ interface prop {
     filterBy: Filter
     setFilterBy: (filter: Filter) => void
     setNav: (string: string) => void
+    nav: string
 }
 
-export function FilterBy({ filterBy, setFilterBy, setNav }: prop) {
+export function FilterBy({ filterBy, setFilterBy, setNav, nav }: prop) {
     const { cityName, alertsAmounts, startDate, endDate, threatSelect } = filterBy
     const [isSideBar, setIsSideBar] = useState<boolean>(true)
 
@@ -34,10 +35,10 @@ export function FilterBy({ filterBy, setFilterBy, setNav }: prop) {
             </article>
 
             <article className="filter-sec flex column justify-center  gap20">
-                <div className="flex column gap5">
+                {nav != 'chart' && <div className="flex column gap5">
                     <label className="slider-label" >Search city:</label>
                     <input type="text" name='cityName' className="input-field" value={cityName} onChange={handleChange} placeholder="Search city" />
-                </div>
+                </div>}
 
                 <div className="flex column gap5">
                     <label className="slider-label">Minimum alerts:</label>

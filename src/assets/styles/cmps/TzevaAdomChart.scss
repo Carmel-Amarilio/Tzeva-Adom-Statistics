@@ -1,13 +1,15 @@
 .tzeva-adom-chart {
-    max-height: 700px;
+    max-height: 95vh;
 
     .statistical {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-        grid-gap: 20px;
+        grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+        grid-gap: 30px;
         padding: 10px;
         border: 1px solid $prime-clr;
         border-radius: 10px;
         text-align: center;
+        align-items: center;
+
     }
 }

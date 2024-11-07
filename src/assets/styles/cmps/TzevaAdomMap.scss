@@ -2,6 +2,9 @@
     position: relative;
 
     .alerts-amounts {
+        display: flex;
+        align-items: center;
+        justify-content: center;
         position: absolute;
         top: 50%;
         left: 50%;
@@ -9,9 +12,24 @@
         background-color: $prime-clr;
         color: white;
         padding: 10px;
+        width: 45px;
+        height: 45px;
         font-size: 14px;
         border-radius: 2em;
+        text-align: center;
         cursor: pointer;
+
+        &::after {
+            position: absolute;
+            content: "";
+            background-color: $prime-clr;
+            width: 25px;
+            height: 25px;
+            top: 25px;
+            left: 10px;
+            z-index: -1;
+            transform: rotate(45deg);
+        }
     }
 
     .last-day-btn {

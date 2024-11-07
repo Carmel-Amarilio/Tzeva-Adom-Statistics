@@ -14,6 +14,7 @@ export function TzevaAdomTable({ cityAlertsMap, filterBy }: prop) {
     const [cityAlertsMapDis, setCityAlertsMapDis] = useState<{ name: string, alertsAmounts: number }[]>(cityAlertsMap)
     const [cityChartData, setCityChartData] = useState<{ cityName: string, cityData: CityData[] }>(null)
     const [threatMap, setThreatMap] = useState(null)
+    const [isByMinute, setIsByMinute] = useState<boolean>(false)
 
 
     useEffect(() => {
@@ -22,7 +23,7 @@ export function TzevaAdomTable({ cityAlertsMap, filterBy }: prop) {
 
     useEffect(() => {
         if (cityChartData) onCity(cityChartData.cityName)
-    }, [filterBy])
+    }, [filterBy, isByMinute])
 
     function sortBy(by: 'name' | 'alertsAmounts', order: 'asc' | 'desc' = 'asc') {
         const cityAlertsMapSort = [...cityAlertsMap].sort((a, b) => {
@@ -34,13 +35,18 @@ export function TzevaAdomTable({ cityAlertsMap, filterBy }: prop) {
     }
 
     function onCity(cityName: string) {
-        const { threatMapTep, cityData } = tzofarService.getByCityName(cityName, filterBy)
+        const { threatMapTep, cityData } = tzofarService.getByCityName(cityName, filterBy, isByMinute)
         setThreatMap(threatMapTep)
         setCityChartData({ cityName, cityData })
     }
 
+    function handleChangeIsByMinute(ev: React.ChangeEvent<HTMLInputElement>) {
+        setIsByMinute(ev.target.checked)
+    }
+
     function closeModal() {
         setCityChartData(null)
+        setIsByMinute(false)
     }
 
 
@@ -73,7 +79,7 @@ export function TzevaAdomTable({ cityAlertsMap, filterBy }: prop) {
                 </table>
             </article>
 
-            {cityChartData && <CityChart cityChartData={cityChartData} closeModal={closeModal} threatMap={threatMap} />}
+            {cityChartData && <CityChart cityChartData={cityChartData} closeModal={closeModal} threatMap={threatMap} handleChangeIsByMinute={handleChangeIsByMinute} isByMinute={isByMinute} />}
 
         </section>
     )
