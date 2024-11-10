@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Filter } from "../models/models";
 
 import { utilService } from "../services/util.service";
+import areasData from '../../src/data/areasData.json';
 
 interface prop {
     filterBy: Filter
@@ -11,17 +12,16 @@ interface prop {
 }
 
 export function FilterBy({ filterBy, setFilterBy, setNav, nav }: prop) {
-    const { cityName, alertsAmounts, startDate, endDate, threatSelect } = filterBy
+    const { cityName, alertsAmounts, startDate, endDate, threatSelect, areaSelect } = filterBy
     const [isSideBar, setIsSideBar] = useState<boolean>(true)
 
-    function handleChange(ev: React.ChangeEvent<HTMLInputElement>) {
-        const { name, value }: { name: string, value: string | number } = ev.target;
-        setFilterBy(prev => ({ ...prev, [name]: value }))
-    }
+    function handleChange(ev: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
+        let val = ev.target.value
+        const { name } = ev.target
 
-    function handleMultiSelectChange(ev: React.ChangeEvent<HTMLSelectElement>) {
-        const options = Array.from(ev.target.selectedOptions, option => option.value);
-        setFilterBy(prev => ({ ...prev, threatSelect: options }));
+        if ('selectedOptions' in ev.target) val = Array.from(ev.target.selectedOptions, option => option.value);
+        setFilterBy(prev => ({ ...prev, [name]: val }));
+
     }
 
 
@@ -57,16 +57,29 @@ export function FilterBy({ filterBy, setFilterBy, setNav, nav }: prop) {
                         <input type="date" id="endDate" name='endDate' min="2023-10-07" max={utilService.getFormattedDate()} value={endDate} className="date-input" onChange={handleChange} />
                     </div>
                 </div>
+                <article className="flex gap5">
 
-                <div className="flex column gap5">
-                    <label htmlFor="multiSelect">Select threats:</label>
-                    <select id="multiSelect" name="multiSelect" multiple value={threatSelect} onChange={handleMultiSelectChange} className="multi-select">
-                        <option value="0">Missiles</option>
-                        <option value="5">Aircraft intrusion</option>
-                        <option value="2">Terrorist infiltration</option>
-                        <option value="3">Earthquake</option>
-                    </select>
-                </div>
+                    <div className="flex column gap5">
+                        <label htmlFor="multiSelect-area">Select threats:</label>
+                        <select id="multiSelect-area" name="areaSelect" multiple value={areaSelect} onChange={handleChange} className="multi-select area">
+                            {Object.keys(areasData).map((key) =>
+                                <option key={key} value={key}>
+                                    {areasData[key].he}
+                                </option>
+                            )}
+                        </select>
+                    </div>
+
+                    <div className="flex column gap5">
+                        <label htmlFor="multiSelect-threats">Select threats:</label>
+                        <select id="multiSelect-threats" name="threatSelect" multiple value={threatSelect} onChange={handleChange} className="multi-select threat">
+                            <option value="0">Missiles</option>
+                            <option value="5">Aircraft intrusion</option>
+                            <option value="2">Terrorist infiltration</option>
+                            <option value="3">Earthquake</option>
+                        </select>
+                    </div>
+                </article>
             </article>
 
         </section>

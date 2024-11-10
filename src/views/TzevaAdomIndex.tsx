@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 
-import { Filter, TzevaAdom } from "../models/models"
+import { CityAlert, Filter, TzevaAdom } from "../models/models"
 import { tzofarService } from "../services/tzofar.service"
 import { utilService } from "../services/util.service"
 
@@ -13,7 +13,7 @@ import { Loader } from "../cmps/Loader"
 
 export function TzevaAdomIndex(): React.ReactElement {
     const [allTzevaAdom, setAllTzevaAdom] = useState<TzevaAdom[]>(null)
-    const [cityAlertsMap, setCityAlertsMap] = useState<{ name: string, alertsAmounts: number }[]>(null)
+    const [cityAlertsMap, setCityAlertsMap] = useState<CityAlert[]>(null)
     const [filterBy, setFilterBy] = useState<Filter>(tzofarService.getEmptyFilter())
     const [nav, setNav] = useState<string>('table')
 
@@ -23,11 +23,8 @@ export function TzevaAdomIndex(): React.ReactElement {
 
     useEffect(() => {
         setAllTzevaAdom(tzofarService.query(filterBy))
+        setCityAlertsMap(tzofarService.getCitiesAlertsMap(filterBy))
     }, [filterBy])
-
-    useEffect(() => {
-        if (allTzevaAdom) setCityAlertsMap(cityMap())
-    }, [filterBy, allTzevaAdom])
 
     useEffect(() => {
         const labelNav = searchParams.get('nav') || 'table';
@@ -36,38 +33,15 @@ export function TzevaAdomIndex(): React.ReactElement {
         const startDate = searchParams.get('startDate') || '2023-10-07';
         const endDate = searchParams.get('endDate') || utilService.getFormattedDate();
         let threatSelect = searchParams.get('threatSelect') ? searchParams.get('threatSelect').split(',') : ['0', '2', '3', '5']
+        let areaSelect = searchParams.get('areaSelect') ? searchParams.get('areaSelect').split(',') : ['1', '2', '3', '4', '5', '6', '7', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '32', '34', '35']
         setNav(labelNav)
-        setFilterBy({ cityName, alertsAmounts, startDate, endDate, threatSelect });
+        setFilterBy({ cityName, alertsAmounts, startDate, endDate, threatSelect, areaSelect });
     }, []);
 
     useEffect(() => {
-        const { cityName, alertsAmounts, startDate, endDate, threatSelect } = filterBy;
-        navigate(`/?nav=${nav}${cityName ? `&cityName=${cityName}` : ''}${alertsAmounts ? `&alertsAmounts=${alertsAmounts}` : ''}${startDate ? `&startDate=${startDate}` : ''}${endDate ? `&endDate=${endDate}` : ''}${threatSelect ? `&threatSelect=${threatSelect}` : ''}`);
+        const { cityName, alertsAmounts, startDate, endDate, threatSelect, areaSelect } = filterBy;
+        navigate(`/?nav=${nav}${cityName ? `&cityName=${cityName}` : ''}${alertsAmounts ? `&alertsAmounts=${alertsAmounts}` : ''}${startDate ? `&startDate=${startDate}` : ''}${endDate ? `&endDate=${endDate}` : ''}${threatSelect ? `&threatSelect=${threatSelect}` : ''}${threatSelect ? `&areaSelect=${areaSelect}` : ''}`);
     }, [filterBy, nav]);
-
-    function cityMap(): { name: string, alertsAmounts: number }[] {
-        const cityMap = {}
-        allTzevaAdom.forEach(alert => {
-            alert.alerts.forEach(al => {
-                al.cities.forEach(city => {
-                    if (cityMap[city]) cityMap[city]++
-                    else cityMap[city] = 1
-                })
-            })
-        })
-
-        const citiesAlerts = []
-        for (const key in cityMap) {
-            citiesAlerts.push({
-                name: key,
-                alertsAmounts: cityMap[key]
-            })
-        }
-
-        return citiesAlerts
-            .filter(({ name }) => name.includes(filterBy.cityName))
-            .filter(({ alertsAmounts }) => alertsAmounts >= filterBy.alertsAmounts)
-    }
 
     // onFilterToday()
     function onFilterToday() {

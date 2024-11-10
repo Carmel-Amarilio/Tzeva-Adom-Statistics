@@ -1,17 +1,19 @@
 import { useEffect, useState } from "react"
 
 import { tzofarService } from "../services/tzofar.service"
-import { CityData, Filter, TzevaAdom } from "../models/models"
+import { CityAlert, CityData, Filter, TzevaAdom } from "../models/models"
 
 import { CityChart } from "./CityChart"
 
+import areasData from '../../src/data/areasData.json';
+
 interface prop {
-    cityAlertsMap: { name: string, alertsAmounts: number }[]
+    cityAlertsMap: CityAlert[]
     filterBy: Filter
 }
 
 export function TzevaAdomTable({ cityAlertsMap, filterBy }: prop) {
-    const [cityAlertsMapDis, setCityAlertsMapDis] = useState<{ name: string, alertsAmounts: number }[]>(cityAlertsMap)
+    const [cityAlertsMapDis, setCityAlertsMapDis] = useState<CityAlert[]>(cityAlertsMap)
     const [cityChartData, setCityChartData] = useState<{ cityName: string, cityData: CityData[] }>(null)
     const [threatMap, setThreatMap] = useState(null)
     const [isByMinute, setIsByMinute] = useState<boolean>(false)
@@ -25,7 +27,7 @@ export function TzevaAdomTable({ cityAlertsMap, filterBy }: prop) {
         if (cityChartData) onCity(cityChartData.cityName)
     }, [filterBy, isByMinute])
 
-    function sortBy(by: 'name' | 'alertsAmounts', order: 'asc' | 'desc' = 'asc') {
+    function sortBy(by: 'name' | 'alertsAmounts' | 'area', order: 'asc' | 'desc' = 'asc') {
         const cityAlertsMapSort = [...cityAlertsMap].sort((a, b) => {
             if (a[by] < b[by]) return order === 'asc' ? -1 : 1;
             if (a[by] > b[by]) return order === 'asc' ? 1 : -1;
@@ -68,12 +70,18 @@ export function TzevaAdomTable({ cityAlertsMap, filterBy }: prop) {
                                     <p>Total: {cityAlertsMapDis.reduce((sum, { alertsAmounts }) => sum + alertsAmounts, 0)}</p>
                                 </div>
                             </th>
+                            <th>
+                                <div className="flex column gap5 align-center justify-center" onClick={() => sortBy('area')}>
+                                    <p>Area</p>
+                                </div>
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
-                        {cityAlertsMapDis.map(({ name, alertsAmounts }) => <tr key={name} onClick={() => onCity(name)}>
+                        {cityAlertsMapDis.map(({ name, alertsAmounts, area }) => <tr key={name} onClick={() => onCity(name)}>
                             <td>{name}</td>
                             <td>{alertsAmounts}</td>
+                            <td>{areasData[area].he}</td>
                         </tr>)}
                     </tbody>
                 </table>

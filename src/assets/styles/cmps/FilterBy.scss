@@ -111,8 +111,8 @@
 
         .multi-select {
             direction: rtl;
-            width: 160px;
-            // height: 120px;
+            width: 150px;
+            height: 160px;
             padding: 10px;
             border: 1px solid #d1d1d1;
             border-radius: 8px;
@@ -121,7 +121,10 @@
             color: #333;
             outline: none;
             cursor: pointer;
-            overflow-y: hidden;
+
+            &.threat {
+                overflow-y: hidden;
+            }
 
             option {
                 padding: 8px;

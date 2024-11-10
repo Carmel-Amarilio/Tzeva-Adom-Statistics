@@ -11,9 +11,17 @@ export interface Alert {
     threat: number,
     isDrill: boolean
 }
+export interface CityAlert {
+    name: string,
+    alertsAmounts: number
+    lng: number
+    lat: number
+    area: number
+}
 export interface CityData {
     date: string;
     alerts: number;
+
 }
 export interface ThreatMap {
     0?: number
@@ -28,4 +36,5 @@ export interface Filter {
     startDate: string
     endDate: string
     threatSelect: string[]
+    areaSelect: string[]
 }
