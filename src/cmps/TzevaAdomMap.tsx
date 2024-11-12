@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import GoogleMapReact from 'google-map-react'
-import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 
 import { googleMapApiKey } from '../../keys'
 import { CityAlert, CityData, Filter, ThreatMap, TzevaAdom } from '../models/models'
@@ -8,6 +8,8 @@ import { tzofarService } from '../services/tzofar.service'
 
 import { Loader } from './Loader'
 import { CityChart } from './CityChart'
+
+import citiesData from '../../src/data/citiesData.json';
 
 
 interface prop {
@@ -26,6 +28,11 @@ export function TzevaAdomMap({ cityAlertsMap, onFilterToday, filterBy }: prop) {
     const [cityChartData, setCityChartData] = useState<{ cityName: string, cityData: CityData[] }>(null)
     const [threatMap, setThreatMap] = useState<ThreatMap>(null)
     const [isByMinute, setIsByMinute] = useState<boolean>(false)
+
+    const lang = useTranslation().i18n.language
+    console.log(lang);
+
+
 
     useEffect(() => {
         if (cityChartData) onCity(cityChartData.cityName)
@@ -58,7 +65,7 @@ export function TzevaAdomMap({ cityAlertsMap, onFilterToday, filterBy }: prop) {
 
 
     const AnyReactComponent = ({ alertsAmounts, name }) =>
-        <div className='alerts-amounts' onClick={() => onCity(name)} title={name}>
+        <div className='alerts-amounts' onClick={() => onCity(name)} title={citiesData[name] ? citiesData[name][lang] : name}>
             <p>{alertsAmounts}</p>
         </div>
 
@@ -66,7 +73,10 @@ export function TzevaAdomMap({ cityAlertsMap, onFilterToday, filterBy }: prop) {
     return (
         <section className='tzeva-adom-map'>
             <GoogleMapReact
-                bootstrapURLKeys={{ key: googleMapApiKey }}
+                bootstrapURLKeys={{
+                    key: googleMapApiKey,
+                    language: { lang },
+                }}
                 defaultCenter={defaultProps.center}
                 defaultZoom={defaultProps.zoom}
             >
@@ -80,9 +90,7 @@ export function TzevaAdomMap({ cityAlertsMap, onFilterToday, filterBy }: prop) {
                             name={name}
                         />
                     }
-                })
-
-                }
+                })}
 
             </GoogleMapReact>
             {!cityAlertsMap && <Loader />}

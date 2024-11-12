@@ -1,3 +1,4 @@
+import { t } from 'i18next';
 import React, { PureComponent } from 'react';
 import {
     BarChart,
@@ -30,7 +31,7 @@ export function BrushBarChart({ data }: props) {
                 <Legend verticalAlign="top" wrapperStyle={{ lineHeight: '40px' }} />
                 <ReferenceLine y={0} stroke="#000" />
                 <Brush dataKey="date" height={30} stroke="#A52A2A" />
-                <Bar dataKey="alerts" fill="#A52A2A" />
+                <Bar dataKey="alerts" fill="#A52A2A" name={t("Alerts")} />
                 {/* <Bar dataKey="uv" fill="#82ca9d" /> */}
             </BarChart>
         </ResponsiveContainer>

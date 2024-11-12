@@ -19,6 +19,18 @@ body {
     padding: 0px;
 }
 
+.app {
+    &.rtl {
+        // direction: rtl;
+
+        .filter-by,
+        .direction-sec {
+            direction: rtl;
+
+        }
+    }
+}
+
 main {
     overflow: hidden;
 }

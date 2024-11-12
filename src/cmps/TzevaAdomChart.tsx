@@ -5,6 +5,7 @@ import { Filter, TzevaAdom } from '../models/models';
 import { utilService } from '../services/util.service';
 
 import { BrushBarChart } from './Charts/BrushBarChart';
+import { t } from 'i18next';
 
 interface props {
     allTzevaAdom: TzevaAdom[]
@@ -33,16 +34,14 @@ export function TzevaAdomChart({ allTzevaAdom, filterBy }: props) {
                 if (!dataMap[date]) dataMap[date] = 0
             })
 
-        allTzevaAdom.forEach(alert => {
-            if (alert.alerts[0]) {
+        allTzevaAdom.forEach(({ alerts }) => {
+            const time = alerts[0].time
+            const date = !isByMinute ?
+                utilService.getFormDate(time * 1000) :
+                utilService.getFormMinute(time * 1000)
 
-                const date = !isByMinute ?
-                    utilService.getFormDate(alert.alerts[0].time * 1000) :
-                    utilService.getFormMinute(alert.alerts[0].time * 1000)
-
-                if (dataMap[date]) dataMap[date]++
-                else dataMap[date] = 1
-            }
+            if (dataMap[date]) dataMap[date]++
+            else dataMap[date] = 1
         })
 
         const data = []
@@ -64,30 +63,30 @@ export function TzevaAdomChart({ allTzevaAdom, filterBy }: props) {
     function maxAlertDay(data: { date: string, alerts: number }[]): string {
         let max = { alerts: 0, date: '' }
         data.forEach(({ date, alerts }) => { if (alerts > max.alerts) max = { date, alerts } })
-        return `${max.alerts} at ${max.date}`
+        return `${max.alerts} ${t('at')}  ${max.date}`
     }
 
-
     const felAlerts = formTzevaAdom.filter(({ alerts }) => alerts <= 0)
+
     return (
         <section className='tzeva-adom-chart flex column gap10'>
             <BrushBarChart data={formTzevaAdom} />
 
-            <article className='flex align-center'>
+            <article className='flex align-center direction-sec'>
                 <div className='flex align-center'>
-                    <label htmlFor="switch">Date/Hours</label>
+                    <label htmlFor="switch">{t('Date/Hours')}</label>
                     <Switch id="switch" onChange={handleChange} />
                 </div>
             </article>
 
             <article className='statistical'>
-                <h3>Total alerts: {formTzevaAdom.reduce((sum, { alerts }) => sum + alerts, 0)} </h3>
-                {!isByMinute ? <h3>Total days: {formTzevaAdom.length} </h3> :
-                    <h3>Safest hours between 9AM-9PM:{utilService.findSafestHour(formTzevaAdom)}</h3>}
-                {!isByMinute ? <h3>Total days without alerts: {felAlerts.length} </h3> :
-                    <h3>longest period without alerts: {utilService.findLongestNoAlertPeriod(formTzevaAdom)}</h3>}
-                <h3>Most alerts: {maxAlertDay(formTzevaAdom)} </h3>
-                <h3>Average break: {utilService.checkAveBreak(allTzevaAdom, filterBy.startDate, filterBy.endDate)} </h3>
+                <h3>{t('Total alerts')}: {formTzevaAdom.reduce((sum, { alerts }) => sum + alerts, 0)} </h3>
+                {!isByMinute ? <h3>{t('Total days')}: {formTzevaAdom.length} </h3> :
+                    <h3>{t('Safest hours between 9AM-9PM')}:{utilService.findSafestHour(formTzevaAdom)}</h3>}
+                {!isByMinute ? <h3>{t('Total days without alerts')}: {felAlerts.length} </h3> :
+                    <h3>{t('longest period without alerts')}: {utilService.findLongestNoAlertPeriod(formTzevaAdom)}</h3>}
+                <h3>{t('Most alerts')}: {maxAlertDay(formTzevaAdom)} </h3>
+                <h3>{t('Average time between alerts')}: {utilService.checkAveBreak(allTzevaAdom, filterBy.startDate, filterBy.endDate)} </h3>
 
 
                 {/* <h3>Total {isByMinute ? 'minutes' : 'days'}: {formTzevaAdom.length} {isByMinute ? '(24h)' : ''} </h3>

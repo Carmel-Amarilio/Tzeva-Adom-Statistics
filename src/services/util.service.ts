@@ -1,3 +1,4 @@
+import { t } from "i18next";
 import { CityData, Filter, TzevaAdom } from "../models/models";
 
 
@@ -93,7 +94,8 @@ function findSafestHour(data: CityData[]) {
             safestHour = hour
         }
     }
-    return ` ${safestHour > 12 ? `${safestHour - 12}:00PM` : `${safestHour}:00AM`}`
+    return ` ${safestHour}:00`
+    return ` ${safestHour > 12 ? `${safestHour - 12}:` : `${safestHour}:00AM`}`
 }
 
 function findLongestNoAlertPeriod(data: CityData[]) {
@@ -153,5 +155,5 @@ function checkAveBreak(allTzevaAdom: TzevaAdom[], starDate: string, endDate: str
     const diffHours = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
     const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
     const diffSeconds = Math.floor((diffMs % (1000 * 60)) / 1000);
-    return (`${diffDays ? `${diffDays}d ,` : ''} ${diffHours ? `${diffHours}h ,` : ''} ${diffMinutes ? `${diffMinutes}m and` : ''} ${diffSeconds}s`)
+    return (`${diffDays ? `${diffDays}${t('d')} ,` : ''} ${diffHours ? `${diffHours}${t('h')} ,` : ''} ${diffMinutes ? `${diffMinutes}${t('m')} ${t('and')}` : ''} ${diffSeconds}${t('s')}`)
 }

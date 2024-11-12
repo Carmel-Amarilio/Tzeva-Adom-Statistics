@@ -15,14 +15,37 @@ export const tzofarService = {
 }
 
 function query(filterBy: Filter): TzevaAdom[] {
+    const { cityName, areaSelect, threatSelect } = filterBy
     const data: TzevaAdom[] = jsonData
-    const startDate = new Date(filterBy.startDate).getTime() / 1000; // Convert to seconds
-    const endDate = new Date(filterBy.endDate).getTime() / 1000 + 86400;
-    const tzevaAdom = data
-        .filter(({ alerts }) => alerts[0].time >= startDate && alerts[0].time <= endDate)
-        .map((alert) => ({ ...alert, alerts: alert.alerts.filter(({ threat }) => filterBy.threatSelect.includes(threat.toString())) }))
+    const allCitiesData = citiesData
 
-    return tzevaAdom
+    const startDate = new Date(filterBy.startDate).getTime() / 1000
+    const endDate = new Date(filterBy.endDate).getTime() / 1000 + 86400
+
+    const filterData = []
+    data.map(tzevaAdom => {
+        const { alerts } = tzevaAdom
+        if (alerts[0].time >= startDate && alerts[0].time <= endDate) {
+            const filterAlerts = []
+            alerts.forEach(alert => {
+                const { threat, cities } = alert
+                if (threatSelect.includes(threat.toString())) {
+                    const filterCities = cities.filter(city => {
+                        const area = allCitiesData[city] ? allCitiesData[city].area : 35
+                        return (city.includes(cityName) ||
+                            (allCitiesData[city] && allCitiesData[city].en.includes(cityName)) ||
+                            areasData[area].he.includes(cityName) ||
+                            areasData[area].en.includes(cityName)
+                        ) && (areaSelect.includes(area.toString()))
+                    })
+                    if (filterCities.length > 0) filterAlerts.push({ ...alert, cities: filterCities })
+                }
+            })
+            if (filterAlerts.length > 0) filterData.push({ ...tzevaAdom, alerts: filterAlerts })
+        }
+    })
+
+    return filterData
 }
 
 function get(tzofarId: number): TzevaAdom {
@@ -30,14 +53,13 @@ function get(tzofarId: number): TzevaAdom {
 }
 
 function getCitiesAlertsMap(filterBy: Filter): CityAlert[] {
-    const { cityName, areaSelect } = filterBy
     const allCitiesData = citiesData
     const allTzevaAdom: TzevaAdom[] = query(filterBy)
 
     const cityMap = {}
     allTzevaAdom.forEach(alert => {
-        alert.alerts.forEach(al => {
-            al.cities.forEach(city => {
+        alert.alerts.forEach(({ cities }) => {
+            cities.forEach(city => {
                 if (cityMap[city]) cityMap[city]++
                 else cityMap[city] = 1
             })
@@ -56,12 +78,7 @@ function getCitiesAlertsMap(filterBy: Filter): CityAlert[] {
         })
     }
 
-    return citiesAlerts
-        .filter(({ name, alertsAmounts, area }) =>
-            (name.includes(cityName) || areasData[area].he.includes(cityName)) &&
-            alertsAmounts >= filterBy.alertsAmounts &&
-            areaSelect.includes(area.toString()
-            ))
+    return citiesAlerts.filter(({ alertsAmounts }) => alertsAmounts >= filterBy.alertsAmounts)
 }
 
 

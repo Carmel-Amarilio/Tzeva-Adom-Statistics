@@ -1,12 +1,14 @@
 .filter-by {
     position: relative;
-    padding: 40px 0px 20px 10px;
+    padding-block: 25px;
+    padding-inline-start: 10px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     background-color: #fff;
     height: 100vh;
     transition: 300ms;
     z-index: 3;
+    min-width: 338px;
 
 
     .close-btn {
@@ -27,7 +29,9 @@
     .nav-sec {
         button {
             font-size: 20px;
-            border-radius: 10px 2em 2em 10px;
+            border-radius: 10px;
+            border-end-end-radius: 2em;
+            border-start-end-radius: 2em;
             width: 90%;
             text-align: start;
             background-color: black;
@@ -41,6 +45,15 @@
             height: 2px;
             background-color: #ccc;
             margin-top: 10px;
+        }
+
+        .lang-sec {
+            width: 90%;
+
+            button {
+                border-radius: 5px;
+                text-align: center;
+            }
         }
     }
 
