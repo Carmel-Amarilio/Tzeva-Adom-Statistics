@@ -17,6 +17,7 @@ export interface CityAlert {
     lng: number
     lat: number
     area: number
+    areasPolygon: number[][]
 }
 export interface CityData {
     date: string;

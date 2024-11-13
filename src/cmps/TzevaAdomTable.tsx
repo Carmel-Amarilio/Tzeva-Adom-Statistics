@@ -7,7 +7,7 @@ import { CityAlert, CityData, Filter, TzevaAdom } from "../models/models"
 
 import { CityChart } from "./CityChart"
 
-import areasData from '../../src/data/areasData.json';
+import landmarksData from '../../src/data/landmarksData.json';
 import citiesData from '../../src/data/citiesData.json';
 
 interface prop {
@@ -87,7 +87,7 @@ export function TzevaAdomTable({ cityAlertsMap, filterBy }: prop) {
                         {cityAlertsMapDis.map(({ name, alertsAmounts, area }) => <tr key={name} onClick={() => onCity(name)}>
                             <td>{citiesData[name] ? citiesData[name][lang] : name}</td>
                             <td>{alertsAmounts}</td>
-                            <td>{area === 35 ? name : areasData[area][lang]}</td>
+                            <td>{area === 35 ? name : landmarksData[area][lang]}</td>
                         </tr>)}
                     </tbody>
                 </table>

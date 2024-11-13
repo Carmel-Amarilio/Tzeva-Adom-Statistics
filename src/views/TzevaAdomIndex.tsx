@@ -49,7 +49,8 @@ export function TzevaAdomIndex(): React.ReactElement {
 
     function onFilterToday() {
         const endDate = utilService.getFormattedDate()
-        const startDate = utilService.getFormattedDate(new Date(new Date().getTime() - 24 * 60 * 60 * 1000))
+        const yesterday = utilService.getFormattedDate(new Date(new Date().getTime() - 24 * 60 * 60 * 1000))
+        const startDate = yesterday === filterBy.startDate ? '2023-10-07' : yesterday
         setFilterBy(prev => ({ ...prev, endDate, startDate }))
     }
 
@@ -58,7 +59,7 @@ export function TzevaAdomIndex(): React.ReactElement {
         <section className="tzeva-adom-index">
             <FilterBy filterBy={filterBy} setFilter={setFilter} setNav={setNav} />
             {nav === 'table' && <TzevaAdomTable cityAlertsMap={cityAlertsMap} filterBy={filterBy} />}
-            {/* {nav === 'map' && <TzevaAdomMap cityAlertsMap={cityAlertsMap} onFilterToday={onFilterToday} filterBy={filterBy} />} */}
+            {nav === 'map' && <TzevaAdomMap cityAlertsMap={cityAlertsMap} onFilterToday={onFilterToday} filterBy={filterBy} />}
             {nav === 'chart' && <TzevaAdomChart allTzevaAdom={allTzevaAdom} filterBy={filterBy} />}
         </section>
     )

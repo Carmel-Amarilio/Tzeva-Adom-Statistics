@@ -4,11 +4,12 @@
     left: 50%;
     transform: translate(-50%, -50%);
     width: 50vw;
-    min-width: 300px;
+    min-width: 330px;
     height: 65vh;
     background-color: white;
     padding: 30px 10px 10px 10px;
     box-shadow: 2px 2px 5px 2px lightgrey;
+    z-index: 3;
 
     h1 {
         // margin: 30px 30px 0px 0px;
@@ -25,5 +26,18 @@
         border-radius: 10px;
         text-align: center;
         align-items: center;
+    }
+
+    @include for-normal-layout {
+        height: 80vh;
+        width: 60vw;
+        font-size: .8em;
+
+        .statistical {
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            grid-gap: 10px;
+            min-height: 130px;
+        }
+
     }
 }

@@ -4,7 +4,8 @@ import { utilService } from "./util.service"
 
 import jsonData from '../../src/data/tzevaAdom.json';
 import citiesData from '../../src/data/citiesData.json';
-import areasData from '../../src/data/areasData.json';
+import landmarksData from '../../src/data/landmarksData.json';
+import areaData from '../../src/data/areaData.json';
 
 export const tzofarService = {
     query,
@@ -34,8 +35,8 @@ function query(filterBy: Filter): TzevaAdom[] {
                         const area = allCitiesData[city] ? allCitiesData[city].area : 35
                         return (city.includes(cityName) ||
                             (allCitiesData[city] && allCitiesData[city].en.includes(cityName)) ||
-                            areasData[area].he.includes(cityName) ||
-                            areasData[area].en.includes(cityName)
+                            landmarksData[area].he.includes(cityName) ||
+                            landmarksData[area].en.includes(cityName)
                         ) && (areaSelect.includes(area.toString()))
                     })
                     if (filterCities.length > 0) filterAlerts.push({ ...alert, cities: filterCities })
@@ -74,7 +75,8 @@ function getCitiesAlertsMap(filterBy: Filter): CityAlert[] {
             alertsAmounts: cityMap[key],
             lat: allCitiesData[key] ? allCitiesData[key].lat : null,
             lng: allCitiesData[key] ? allCitiesData[key].lng : null,
-            area: allCitiesData[key] ? allCitiesData[key].area : 35
+            area: allCitiesData[key] ? allCitiesData[key].area : 35,
+            areasPolygon: allCitiesData[key] ? areaData[allCitiesData[key].id] : []
         })
     }
 

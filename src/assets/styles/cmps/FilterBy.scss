@@ -159,6 +159,7 @@
         position: absolute;
         left: -345px;
         max-width: 345px;
+        gap: 15px !important;
 
         &.show {
             left: 0px;
@@ -171,4 +172,5 @@
         }
 
     }
+
 }

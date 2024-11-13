@@ -5,7 +5,7 @@ import { utilService } from "../services/util.service";
 import i18n from "../services/i18n.service";
 import { t } from "i18next";
 
-import areasData from '../../src/data/areasData.json';
+import landmarksData from '../../src/data/landmarksData.json';
 import { useTranslation } from "react-i18next";
 
 interface prop {
@@ -72,9 +72,9 @@ export function FilterBy({ filterBy, setFilter, setNav }: prop) {
                     <div className="flex column gap5">
                         <label htmlFor="multiSelect-area">{t('Select area')}:</label>
                         <select id="multiSelect-area" name="areaSelect" multiple value={areaSelect} onChange={handleChange} className="multi-select area">
-                            {Object.keys(areasData).map((key) =>
+                            {Object.keys(landmarksData).map((key) =>
                                 <option key={key} value={key}>
-                                    {areasData[key][lang]}
+                                    {landmarksData[key][lang]}
                                 </option>
                             )}
                         </select>

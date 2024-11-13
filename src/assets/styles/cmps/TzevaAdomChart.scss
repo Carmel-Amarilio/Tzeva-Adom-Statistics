@@ -12,4 +12,17 @@
         align-items: center;
 
     }
+
+    @include for-normal-layout {
+        // height: 75vh;
+        // width: 60vw;
+        font-size: .8em;
+
+        .statistical {
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            grid-gap: 10px;
+            min-height: 180px;
+        }
+
+    }
 }
