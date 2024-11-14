@@ -16,8 +16,14 @@
         grid-row: 3;
     }
 
+
     @include for-normal-layout {
         grid-template-columns: 1fr 5px;
-        padding-inline-start: 30px;
+        padding-inline-start: 10px;
+
+        .recharts-surface {
+            padding-inline-end: 30px;
+        }
+
     }
 }

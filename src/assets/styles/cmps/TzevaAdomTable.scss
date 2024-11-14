@@ -66,5 +66,8 @@
         }
     }
 
+    @include for-normal-layout {
+        padding-block-start: 10px;
 
+    }
 }

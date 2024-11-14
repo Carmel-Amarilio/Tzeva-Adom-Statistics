@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 
 import { googleMapApiKey } from '../../keys'
 import { CityAlert, CityData, Filter, ThreatMap, TzevaAdom } from '../models/models'
-import { tzofarService } from '../services/tzofar.service'
+import { TzevaAdomService } from '../services/TzevaAdom.service'
 import { utilService } from '../services/util.service'
 
 import { Loader } from './Loader'
@@ -51,7 +51,7 @@ export function TzevaAdomMap({ cityAlertsMap, onFilterToday, filterBy }: prop) {
 
 
     function onCity(cityName: string) {
-        const { threatMapTep, cityData } = tzofarService.getByCityName(cityName, filterBy, isByMinute)
+        const { threatMapTep, cityData } = TzevaAdomService.getByCityName(cityName, filterBy, isByMinute)
         setThreatMap(threatMapTep)
         setCityChartData({ cityName, cityData })
     }

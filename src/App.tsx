@@ -3,7 +3,6 @@ import { Route, HashRouter as Router, Routes } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 
-import { insertDataService } from './services/insertData.service'
 import './services/i18n.service';
 
 import { store } from './store/store'
@@ -17,13 +16,6 @@ import './assets/styles/main.scss'
 export function App(): React.ReactElement {
   const { i18n } = useTranslation();
   const langsRTL = ['he']
-
-
-  useEffect(() => {
-    // insertDataService.fetchFromTzofar()
-  }, [])
-
-
 
   return (
     <Provider store={store}>

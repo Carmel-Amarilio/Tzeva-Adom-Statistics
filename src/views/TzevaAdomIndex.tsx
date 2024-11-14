@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 
 import { CityAlert, Filter, TzevaAdom } from "../models/models"
-import { tzofarService } from "../services/tzofar.service"
+import { TzevaAdomService } from "../services/TzevaAdom.service"
 import { utilService } from "../services/util.service"
 
 import { FilterBy } from "../cmps/FilterBy"
@@ -14,7 +14,7 @@ import { Loader } from "../cmps/Loader"
 export function TzevaAdomIndex(): React.ReactElement {
     const [allTzevaAdom, setAllTzevaAdom] = useState<TzevaAdom[]>(null)
     const [cityAlertsMap, setCityAlertsMap] = useState<CityAlert[]>(null)
-    const [filterBy, setFilterBy] = useState<Filter>(tzofarService.getEmptyFilter())
+    const [filterBy, setFilterBy] = useState<Filter>(TzevaAdomService.getEmptyFilter())
     const [nav, setNav] = useState<string>('table')
 
     const location = useLocation()
@@ -22,8 +22,8 @@ export function TzevaAdomIndex(): React.ReactElement {
     const navigate = useNavigate();
 
     useEffect(() => {
-        setAllTzevaAdom(tzofarService.query(filterBy))
-        setCityAlertsMap(tzofarService.getCitiesAlertsMap(filterBy))
+        setAllTzevaAdom(TzevaAdomService.query(filterBy))
+        setCityAlertsMap(TzevaAdomService.getCitiesAlertsMap(filterBy))
     }, [filterBy])
 
     useEffect(() => {

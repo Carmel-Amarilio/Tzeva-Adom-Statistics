@@ -71,9 +71,10 @@
         transform: translate(-50%, -50%);
     }
 
+
     @include for-normal-layout {
         .color-spectrum-sec {
-
+            top: 30px;
             font-size: .8em;
 
             h4 {
@@ -86,6 +87,10 @@
 
                 font-size: 10px;
             }
+        }
+
+        .last-day-btn {
+            top: 70px;
         }
 
     }

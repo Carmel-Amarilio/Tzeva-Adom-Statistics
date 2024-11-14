@@ -9,11 +9,12 @@
     transition: 300ms;
     z-index: 3;
     min-width: 338px;
+    z-index: 5;
 
 
     .close-btn {
         position: absolute;
-        top: 5px;
+        top: 0px;
         right: 30px;
         width: 30px;
         height: 30px;

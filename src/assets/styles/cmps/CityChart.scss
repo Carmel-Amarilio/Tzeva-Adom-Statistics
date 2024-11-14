@@ -4,7 +4,7 @@
     left: 50%;
     transform: translate(-50%, -50%);
     width: 50vw;
-    min-width: 330px;
+    min-width: 320px;
     height: 65vh;
     background-color: white;
     padding: 30px 10px 10px 10px;
@@ -32,6 +32,10 @@
         height: 80vh;
         width: 60vw;
         font-size: .8em;
+
+        label {
+            max-width: 80px;
+        }
 
         .statistical {
             grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));

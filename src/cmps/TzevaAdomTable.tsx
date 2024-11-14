@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next";
 import { t } from "i18next";
 
-import { tzofarService } from "../services/tzofar.service"
+import { TzevaAdomService } from "../services/TzevaAdom.service"
 import { CityAlert, CityData, Filter, TzevaAdom } from "../models/models"
 
 import { CityChart } from "./CityChart"
@@ -43,7 +43,7 @@ export function TzevaAdomTable({ cityAlertsMap, filterBy }: prop) {
     }
 
     function onCity(cityName: string) {
-        const { threatMapTep, cityData } = tzofarService.getByCityName(cityName, filterBy, isByMinute)
+        const { threatMapTep, cityData } = TzevaAdomService.getByCityName(cityName, filterBy, isByMinute)
         setThreatMap(threatMapTep)
         setCityChartData({ cityName, cityData })
     }
