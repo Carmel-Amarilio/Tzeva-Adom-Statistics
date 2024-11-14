@@ -14,11 +14,11 @@ export const utilService = {
     checkAveBreak
 }
 
+let gTimer: ReturnType<typeof setTimeout>;
 function debounce<T extends (...args: any[]) => void>(func: T, timeout: number = 300): (...args: Parameters<T>) => void {
-    let timer: ReturnType<typeof setTimeout>;
     return (...args: Parameters<T>): void => {
-        clearTimeout(timer);
-        timer = setTimeout(() => { func.apply(this, args); }, timeout);
+        clearTimeout(gTimer);
+        gTimer = setTimeout(() => { func.apply(this, args); }, timeout);
     };
 }
 

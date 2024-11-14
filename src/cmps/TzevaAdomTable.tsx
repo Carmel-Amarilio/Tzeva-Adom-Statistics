@@ -20,6 +20,7 @@ export function TzevaAdomTable({ cityAlertsMap, filterBy }: prop) {
     const [cityChartData, setCityChartData] = useState<{ cityName: string, cityData: CityData[] }>(null)
     const [threatMap, setThreatMap] = useState(null)
     const [isByMinute, setIsByMinute] = useState<boolean>(false)
+    const [sortBy, setSortBy] = useState<string>('')
 
     const lang = useTranslation().i18n.language
 
@@ -33,12 +34,13 @@ export function TzevaAdomTable({ cityAlertsMap, filterBy }: prop) {
         if (cityChartData) onCity(cityChartData.cityName)
     }, [filterBy, isByMinute])
 
-    function sortBy(by: 'name' | 'alertsAmounts' | 'area', order: 'asc' | 'desc' = 'asc') {
+    function onSortBy(by: 'name' | 'alertsAmounts' | 'area', order: 'asc' | 'desc' = 'asc') {
         const cityAlertsMapSort = [...cityAlertsMap].sort((a, b) => {
             if (a[by] < b[by]) return order === 'asc' ? -1 : 1;
             if (a[by] > b[by]) return order === 'asc' ? 1 : -1;
             return 0;
         })
+        setSortBy(by)
         setCityAlertsMapDis(cityAlertsMapSort)
     }
 
@@ -65,20 +67,28 @@ export function TzevaAdomTable({ cityAlertsMap, filterBy }: prop) {
                     <thead>
                         <tr>
                             <th>
-                                <div className="flex column gap5 align-center justify-center" onClick={() => sortBy('name')}>
-                                    <p>{t('City')}</p>
-                                    <p>{t('Total')}: {cityAlertsMapDis.length}</p>
+                                <div className="flex gap5 align-center justify-center" onClick={() => onSortBy('name')}>
+                                    <div className="flex column gap5 align-center justify-center">
+                                        <p>{t('City')}</p>
+                                        <p>{t('Total')}: {cityAlertsMapDis.length}</p>
+                                    </div>
+                                    <i className={`fa-solid fa-angle-${sortBy === 'name' ? 'up' : 'down'}`}></i>
                                 </div>
                             </th>
                             <th>
-                                <div className="flex column gap5 align-center justify-center" onClick={() => sortBy('alertsAmounts', 'desc')}>
-                                    <p>{t('Alerts')}</p>
-                                    <p>{t('Total')}: {cityAlertsMapDis.reduce((sum, { alertsAmounts }) => sum + alertsAmounts, 0)}</p>
+                                <div className="flex gap5 align-center justify-center" onClick={() => onSortBy('alertsAmounts', 'desc')}>
+
+                                    <div className="flex column gap5 align-center justify-center">
+                                        <p>{t('Alerts')}</p>
+                                        <p>{t('Total')}: {cityAlertsMapDis.reduce((sum, { alertsAmounts }) => sum + alertsAmounts, 0)}</p>
+                                    </div>
+                                    <i className={`fa-solid fa-angle-${sortBy === 'alertsAmounts' ? 'up' : 'down'}`}></i>
                                 </div>
                             </th>
                             <th>
-                                <div className="flex column gap5 align-center justify-center" onClick={() => sortBy('area')}>
+                                <div className="flex gap5 align-center justify-center" onClick={() => onSortBy('area')}>
                                     <p>{t('Area')}</p>
+                                    <i className={`fa-solid fa-angle-${sortBy === 'area' ? 'up' : 'down'}`}></i>
                                 </div>
                             </th>
                         </tr>
@@ -95,6 +105,6 @@ export function TzevaAdomTable({ cityAlertsMap, filterBy }: prop) {
 
             {cityChartData && <CityChart cityChartData={cityChartData} closeModal={closeModal} threatMap={threatMap} handleChangeIsByMinute={handleChangeIsByMinute} isByMinute={isByMinute} />}
 
-        </section>
+        </section >
     )
 }

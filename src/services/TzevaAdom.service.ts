@@ -57,6 +57,8 @@ function get(TzevaAdomId: number): TzevaAdom {
 function getCitiesAlertsMap(filterBy: Filter): CityAlert[] {
     const allCitiesData = citiesData
     const allTzevaAdom: TzevaAdom[] = query(filterBy)
+    console.log(123);
+
 
     const cityMap = {}
     allTzevaAdom.forEach(alert => {

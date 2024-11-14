@@ -21,9 +21,12 @@ export function TzevaAdomIndex(): React.ReactElement {
     const searchParams = new URLSearchParams(location.search)
     const navigate = useNavigate();
 
+    const debouncedSetCityAlertsMap = utilService.debounce((filter: any) => setCityAlertsMap(TzevaAdomService.getCitiesAlertsMap(filter)), 500);
+
     useEffect(() => {
         setAllTzevaAdom(TzevaAdomService.query(filterBy))
-        setCityAlertsMap(TzevaAdomService.getCitiesAlertsMap(filterBy))
+        if (nav === 'map') debouncedSetCityAlertsMap(filterBy)
+        else setCityAlertsMap(TzevaAdomService.getCitiesAlertsMap(filterBy))
     }, [filterBy])
 
     useEffect(() => {

@@ -73,10 +73,10 @@ export function TzevaAdomMap({ cityAlertsMap, onFilterToday, filterBy }: prop) {
         return 'red';
     }
 
-    const AnyReactComponent = ({ alertsAmounts, name }) =>
-        <div className='alerts-amounts' onClick={() => onCity(name)} title={citiesData[name] ? citiesData[name][lang] : name}>
-            <p>{alertsAmounts}</p>
-        </div>
+    // const AnyReactComponent = ({ alertsAmounts, name }) =>
+    //     <div className='alerts-amounts' onClick={() => onCity(name)} title={citiesData[name] ? citiesData[name][lang] : name}>
+    //         <p>{alertsAmounts}</p>
+    //     </div>
 
     const yesterday = utilService.getFormattedDate(new Date(new Date().getTime() - 24 * 60 * 60 * 1000))
     return (
