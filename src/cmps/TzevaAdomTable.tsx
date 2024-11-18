@@ -20,7 +20,7 @@ export function TzevaAdomTable({ cityAlertsMap, filterBy }: prop) {
     const [cityChartData, setCityChartData] = useState<{ cityName: string, cityData: CityData[] }>(null)
     const [threatMap, setThreatMap] = useState(null)
     const [isByMinute, setIsByMinute] = useState<boolean>(false)
-    const [sortBy, setSortBy] = useState<string>('')
+    const [sortBy, setSortBy] = useState({ name: 1, alertsAmounts: 1, area: 1 })
 
     const lang = useTranslation().i18n.language
 
@@ -34,13 +34,19 @@ export function TzevaAdomTable({ cityAlertsMap, filterBy }: prop) {
         if (cityChartData) onCity(cityChartData.cityName)
     }, [filterBy, isByMinute])
 
-    function onSortBy(by: 'name' | 'alertsAmounts' | 'area', order: 'asc' | 'desc' = 'asc') {
-        const cityAlertsMapSort = [...cityAlertsMap].sort((a, b) => {
-            if (a[by] < b[by]) return order === 'asc' ? -1 : 1;
-            if (a[by] > b[by]) return order === 'asc' ? 1 : -1;
+    function onSortBy(by: 'name' | 'alertsAmounts' | 'area') {
+        const newSort = { ...sortBy, [by]: sortBy[by] * -1 }
+
+        const cityAlertsMapSort = [...cityAlertsMapDis].sort((a, b) => {
+            if (by === 'alertsAmounts') return (a[by] - b[by]) * newSort[by]
+            // if (a[by] < b[by]) return -1 * newSort[by];
+            if (!citiesData[a[by]] || !citiesData[b[by]]) return 0
+            if (citiesData[a[by]][lang] < citiesData[b[by]][lang]) return -1 * newSort[by];
+            if (citiesData[a[by]][lang] > citiesData[b[by]][lang]) return 1 * newSort[by];
             return 0;
         })
-        setSortBy(by)
+
+        setSortBy(newSort)
         setCityAlertsMapDis(cityAlertsMapSort)
     }
 
@@ -72,23 +78,23 @@ export function TzevaAdomTable({ cityAlertsMap, filterBy }: prop) {
                                         <p>{t('City')}</p>
                                         <p>{t('Total')}: {cityAlertsMapDis.length}</p>
                                     </div>
-                                    <i className={`fa-solid fa-angle-${sortBy === 'name' ? 'up' : 'down'}`}></i>
+                                    <i className={`fa-solid fa-angle-${sortBy.name < 0 ? 'up' : 'down'}`}></i>
                                 </div>
                             </th>
                             <th>
-                                <div className="flex gap5 align-center justify-center" onClick={() => onSortBy('alertsAmounts', 'desc')}>
+                                <div className="flex gap5 align-center justify-center" onClick={() => onSortBy('alertsAmounts')}>
 
                                     <div className="flex column gap5 align-center justify-center">
                                         <p>{t('Alerts')}</p>
                                         <p>{t('Total')}: {cityAlertsMapDis.reduce((sum, { alertsAmounts }) => sum + alertsAmounts, 0)}</p>
                                     </div>
-                                    <i className={`fa-solid fa-angle-${sortBy === 'alertsAmounts' ? 'up' : 'down'}`}></i>
+                                    <i className={`fa-solid fa-angle-${sortBy.alertsAmounts < 0 ? 'up' : 'down'}`}></i>
                                 </div>
                             </th>
                             <th>
                                 <div className="flex gap5 align-center justify-center" onClick={() => onSortBy('area')}>
                                     <p>{t('Area')}</p>
-                                    <i className={`fa-solid fa-angle-${sortBy === 'area' ? 'up' : 'down'}`}></i>
+                                    <i className={`fa-solid fa-angle-${sortBy.area < 0 ? 'up' : 'down'}`}></i>
                                 </div>
                             </th>
                         </tr>
@@ -97,7 +103,7 @@ export function TzevaAdomTable({ cityAlertsMap, filterBy }: prop) {
                         {cityAlertsMapDis.map(({ name, alertsAmounts, area }) => <tr key={name} onClick={() => onCity(name)}>
                             <td>{citiesData[name] ? citiesData[name][lang] : name}</td>
                             <td>{alertsAmounts}</td>
-                            <td>{area === 35 ? name : landmarksData[area][lang]}</td>
+                            <td>{area === 35 ? '-' : landmarksData[area][lang]}</td>
                         </tr>)}
                     </tbody>
                 </table>

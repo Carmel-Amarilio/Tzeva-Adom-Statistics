@@ -2,7 +2,7 @@ import { CityAlert, Filter, TzevaAdom } from "../models/models"
 
 import { utilService } from "./util.service"
 
-import jsonData from '../data/tzevaAdom.json';
+import tzevaAdomData from '../data/tzevaAdom.json';
 import citiesData from '../data/citiesData.json';
 import landmarksData from '../data/landmarksData.json';
 import areaData from '../data/areaData.json';
@@ -15,9 +15,10 @@ export const TzevaAdomService = {
     getEmptyFilter
 }
 
+
 function query(filterBy: Filter): TzevaAdom[] {
     const { cityName, areaSelect, threatSelect } = filterBy
-    const data: TzevaAdom[] = jsonData
+    const data: TzevaAdom[] = tzevaAdomData
     const allCitiesData = citiesData
 
     const startDate = new Date(filterBy.startDate).getTime() / 1000
@@ -51,7 +52,7 @@ function query(filterBy: Filter): TzevaAdom[] {
 }
 
 function get(TzevaAdomId: number): TzevaAdom {
-    return jsonData.find(({ id }) => TzevaAdomId === id)
+    return tzevaAdomData.find(({ id }) => TzevaAdomId === id)
 }
 
 function getCitiesAlertsMap(filterBy: Filter): CityAlert[] {

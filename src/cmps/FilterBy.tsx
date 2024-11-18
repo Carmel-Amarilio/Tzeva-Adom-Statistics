@@ -16,7 +16,7 @@ interface prop {
 
 export function FilterBy({ filterBy, setFilter, setNav }: prop) {
     const { cityName, alertsAmounts, startDate, endDate, threatSelect, areaSelect } = filterBy
-    const [isSideBar, setIsSideBar] = useState<boolean>(true)
+    const [isSideBar, setIsSideBar] = useState<boolean>(false)
 
     const lang = useTranslation().i18n.language
 

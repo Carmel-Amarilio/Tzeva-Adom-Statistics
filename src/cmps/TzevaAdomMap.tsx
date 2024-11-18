@@ -32,9 +32,6 @@ export function TzevaAdomMap({ cityAlertsMap, onFilterToday, filterBy }: prop) {
     const [isByMinute, setIsByMinute] = useState<boolean>(false)
 
     const lang = useTranslation().i18n.language
-    console.log(lang);
-
-
 
     useEffect(() => {
         if (cityChartData) onCity(cityChartData.cityName)
@@ -91,6 +88,7 @@ export function TzevaAdomMap({ cityAlertsMap, onFilterToday, filterBy }: prop) {
                 defaultZoom={defaultProps.zoom}
                 yesIWantToUseGoogleMapApiInternals
                 onGoogleApiLoaded={({ map, maps }) => {
+                    const infoWindow = new maps.InfoWindow();
                     cityAlertsMap.forEach(({ name, areasPolygon, alertsAmounts }) => {
                         const polygonColor = getPolygonColor(alertsAmounts);
                         if (areasPolygon) {
@@ -105,6 +103,15 @@ export function TzevaAdomMap({ cityAlertsMap, onFilterToday, filterBy }: prop) {
 
                             polygon.setMap(map);
                             polygon.addListener('click', () => onCity(name));
+                            polygon.addListener('mouseover', (event) => {
+                                const title = `${t('City')}: ${name} <br> ${t('Alerts')}: ${alertsAmounts}`
+                                infoWindow.setContent(title);
+                                infoWindow.setPosition(event.latLng);
+                                infoWindow.open(map);
+                            });
+                            polygon.addListener('mouseout', () => {
+                                infoWindow.close();
+                            });
                         }
                     });
                 }}
