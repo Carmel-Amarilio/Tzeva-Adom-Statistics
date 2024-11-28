@@ -87,17 +87,9 @@
 
         .slider-input {
             width: 150px;
-            height: 8px;
-            background: #ddd;
-            border-radius: 5px;
-            outline: none;
-            transition: background-color 0.3s ease;
-            cursor: pointer;
 
-
-
-            &:hover::-webkit-slider-thumb {
-                transform: scale(1.2);
+            .MuiSlider-track {
+                background-color: $prime-clr;
             }
         }
 
@@ -123,35 +115,25 @@
         }
 
 
-        .multi-select {
-            direction: rtl;
-            width: 150px;
-            height: 160px;
-            padding: 10px;
-            border: 1px solid #d1d1d1;
-            border-radius: 8px;
-            background-color: #f9f9f9;
-            font-size: 14px;
-            color: #333;
-            outline: none;
-            cursor: pointer;
+        .multi-select-sec {
 
-            &.threat {
-                overflow-y: hidden;
+            .MuiAutocomplete-root {
+                width: 160px;
+                max-height: 140px;
+
+                .MuiAutocomplete-wrapper {
+                    overflow-y: auto;
+                    scrollbar-width: none;
+                }
+
+                .MuiChip-action {
+                    background-color: $prime-clr;
+                }
             }
 
-            option {
-                padding: 8px;
-                margin: 2px 0;
-                border-radius: 4px;
-
-                &:hover {
-                    background-color: #e4e4e4;
-                }
-
-                &:checked {
-                    background-color: #d0e7ff;
-                }
+            .select-all-btn {
+                border-radius: 5px;
+                background-color: $prime-clr;
             }
         }
     }

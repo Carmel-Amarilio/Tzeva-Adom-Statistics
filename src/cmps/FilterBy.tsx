@@ -7,6 +7,8 @@ import { t } from "i18next";
 
 import landmarksData from '../../src/data/landmarksData.json';
 import { useTranslation } from "react-i18next";
+import MultipleSelection from "./MUI/MultipleSelection";
+import Slider from '@mui/joy/Slider';
 
 interface prop {
     filterBy: Filter
@@ -16,6 +18,7 @@ interface prop {
 
 export function FilterBy({ filterBy, setFilter, setNav }: prop) {
     const { cityName, alertsAmounts, startDate, endDate, threatSelect, areaSelect } = filterBy
+
     const [isSideBar, setIsSideBar] = useState<boolean>(false)
 
     const lang = useTranslation().i18n.language
@@ -30,6 +33,11 @@ export function FilterBy({ filterBy, setFilter, setNav }: prop) {
         i18n.changeLanguage(lng)
     }
 
+    const areasOptions = Object.keys(landmarksData).map((key) => ({ value: +key, title: landmarksData[key][lang] }))
+    const threatsOptions = [{ value: 0, title: t('Missiles') }, { value: 5, title: t('Aircraft intrusion') }, { value: 2, title: t('Terrorist infiltration') }, { value: 3, title: t('Earthquake') }]
+
+    const allAreas = ['1', '2', '3', '4', '5', '6', '7', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '32', '34', '35']
+    const allThreats = ['0', '2', '3', '5']
 
     return (
         <section className={`filter-by flex column gap30 ${isSideBar ? 'show' : ''}`}>
@@ -54,7 +62,7 @@ export function FilterBy({ filterBy, setFilter, setNav }: prop) {
                     <label className="slider-label">{t('Minimum alerts')}:</label>
                     <div className="flex align-center gap5">
                         <input type="number" min={0} max={600} value={alertsAmounts} name="alertsAmounts" onChange={handleChange} className="num-input input-field" />
-                        <input type="range" min={0} max={600} value={alertsAmounts} name="alertsAmounts" onChange={handleChange} className="slider-input" />
+                        <Slider color="danger" size="lg" min={0} max={600} value={+alertsAmounts} name="alertsAmounts" onChange={handleChange} className="slider-input" />
                     </div>
                 </div>
 
@@ -62,33 +70,27 @@ export function FilterBy({ filterBy, setFilter, setNav }: prop) {
                     <label>{t("Dates")}:</label>
                     <div className="flex align-center gap10">
                         <label htmlFor="startDate">{t('from')}:</label>
-                        <input type="date" id="startDate" name='startDate' min="2023-10-07" max={utilService.getFormattedDate()} value={startDate} className="date-input" onChange={handleChange} />
+                        <input type="date" id="startDate" name='startDate' min="2023-10-07" max="2024-11-27" value={startDate} className="date-input" onChange={handleChange} />
                         <label htmlFor="endDate">{t('to')}:</label>
-                        <input type="date" id="endDate" name='endDate' min="2023-10-07" max={utilService.getFormattedDate()} value={endDate} className="date-input" onChange={handleChange} />
+                        <input type="date" id="endDate" name='endDate'
+                            min="2023-10-07"
+                            // max={utilService.getFormattedDate()} 
+                            max="2024-11-27"
+                            value={endDate} className="date-input" onChange={handleChange} />
                     </div>
                 </div>
-                <article className="flex gap5">
-
+                <article className="multi-select-sec flex gap5">
                     <div className="flex column gap5">
                         <label htmlFor="multiSelect-area">{t('Select area')}:</label>
-                        <select id="multiSelect-area" name="areaSelect" multiple value={areaSelect} onChange={handleChange} className="multi-select area">
-                            {Object.keys(landmarksData).map((key) =>
-                                <option key={key} value={key}>
-                                    {landmarksData[key][lang]}
-                                </option>
-                            )}
-                        </select>
+                        <MultipleSelection name='areaSelect' options={areasOptions} setFilter={setFilter} value={areaSelect} />
+                        <button className="select-all-btn" onClick={() => setFilter('areaSelect', allAreas)}>{t('Select All')}</button>
                     </div>
-
                     <div className="flex column gap5">
                         <label htmlFor="multiSelect-threats">{t('Select threats')}:</label>
-                        <select id="multiSelect-threats" name="threatSelect" multiple value={threatSelect} onChange={handleChange} className="multi-select threat">
-                            <option value="0">{t('Missiles')}</option>
-                            <option value="5">{t('Aircraft intrusion')}</option>
-                            <option value="2">{t('Terrorist infiltration')}</option>
-                            <option value="3">{t('Earthquake')}</option>
-                        </select>
+                        <MultipleSelection name='threatSelect' options={threatsOptions} setFilter={setFilter} value={threatSelect} />
+                        <button className="select-all-btn" onClick={() => setFilter('threatSelect', allThreats)} >{t('Select All')}</button>
                     </div>
+
                 </article>
             </article>
 

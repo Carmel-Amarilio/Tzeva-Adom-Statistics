@@ -40,7 +40,7 @@
 
         .color-spectrum {
             direction: ltr;
-            background: linear-gradient(to right, green, yellow, orange, red);
+            background: linear-gradient(to right, rgb(0, 128, 0), rgb(255, 255, 0), rgb(255, 166, 0), rgb(255, 0, 0));
             width: 290px;
             height: 30px;
             border-radius: 10px;
@@ -59,7 +59,8 @@
         border-radius: 10px;
 
         &:hover,
-        &:active {
+        &:active,
+        &.active {
             background-color: $prime-clr;
         }
     }

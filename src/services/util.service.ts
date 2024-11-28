@@ -11,7 +11,8 @@ export const utilService = {
     getMinuteRange,
     findSafestHour,
     findLongestNoAlertPeriod,
-    checkAveBreak
+    checkAveBreak,
+    interpolateColor
 }
 
 let gTimer: ReturnType<typeof setTimeout>;
@@ -156,4 +157,25 @@ function checkAveBreak(allTzevaAdom: TzevaAdom[], starDate: string, endDate: str
     const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
     const diffSeconds = Math.floor((diffMs % (1000 * 60)) / 1000);
     return (`${diffDays ? `${diffDays}${t('d')} ,` : ''} ${diffHours ? `${diffHours}${t('h')} ,` : ''} ${diffMinutes ? `${diffMinutes}${t('m')} ${t('and')}` : ''} ${diffSeconds}${t('s')}`)
+}
+
+function interpolateColor(color1: string, color2: string, ratio: number): string {
+    const hexToRgb = (hex: string) =>
+        hex
+            .replace(/^#/, '')
+            .match(/.{2}/g)!
+            .map((x) => parseInt(x, 16));
+
+    const rgbToHex = (rgb: number[]) =>
+        '#' +
+        rgb
+            .map((x) => x.toString(16).padStart(2, '0'))
+            .join('');
+
+    const rgb1 = hexToRgb(color1);
+    const rgb2 = hexToRgb(color2);
+
+    const interpolatedRgb = rgb1.map((start, i) => Math.round(start + ratio * (rgb2[i] - start)));
+
+    return rgbToHex(interpolatedRgb);
 }

@@ -52,8 +52,9 @@ export function TzevaAdomIndex(): React.ReactElement {
 
     function onFilterToday() {
         const endDate = utilService.getFormattedDate()
-        const yesterday = utilService.getFormattedDate(new Date(new Date().getTime() - 24 * 60 * 60 * 1000))
-        const startDate = yesterday === filterBy.startDate ? '2023-10-07' : yesterday
+        // const yesterday = utilService.getFormattedDate(new Date(new Date().getTime() - 24 * 60 * 60 * 1000))
+        // const startDate = yesterday === filterBy.startDate ? '2023-10-07' : yesterday
+        const startDate = '2023-10-07'
         setFilterBy(prev => ({ ...prev, endDate, startDate }))
     }
 

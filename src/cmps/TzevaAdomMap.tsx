@@ -64,10 +64,23 @@ export function TzevaAdomMap({ cityAlertsMap, onFilterToday, filterBy }: prop) {
 
     function getPolygonColor(alertsAmounts: number) {
         const diffInDays = (new Date(filterBy.endDate).getTime() - new Date(filterBy.startDate).getTime()) / (1000 * 60 * 60 * 24)
-        if (alertsAmounts < diffInDays / 16) return 'green';
-        if (alertsAmounts > diffInDays / 16 && alertsAmounts <= diffInDays / 12) return 'yellow';
-        if (alertsAmounts > diffInDays / 12 && alertsAmounts <= diffInDays / 8) return 'orange';
-        return 'red';
+
+        const greenThreshold = diffInDays / 16;
+        const yellowThreshold = diffInDays / 12;
+        const orangeThreshold = diffInDays / 8;
+
+        let ratio: number;
+        if (alertsAmounts <= greenThreshold) {
+            ratio = alertsAmounts / greenThreshold
+            return utilService.interpolateColor('#00FF00', '#FFFF00', ratio)
+        } else if (alertsAmounts <= yellowThreshold) {
+            ratio = (alertsAmounts - greenThreshold) / (yellowThreshold - greenThreshold)
+            return utilService.interpolateColor('#FFFF00', '#FFA500', ratio)
+        } else if (alertsAmounts <= orangeThreshold) {
+            ratio = (alertsAmounts - yellowThreshold) / (orangeThreshold - yellowThreshold)
+            return utilService.interpolateColor('#FFA500', '#FF0000', ratio)
+        }
+        return '#FF0000'
     }
 
     // const AnyReactComponent = ({ alertsAmounts, name }) =>
@@ -143,8 +156,11 @@ export function TzevaAdomMap({ cityAlertsMap, onFilterToday, filterBy }: prop) {
             {!cityAlertsMap && <Loader />}
             {cityChartData && <CityChart cityChartData={cityChartData} closeModal={closeModal} threatMap={threatMap} handleChangeIsByMinute={handleChangeIsByMinute} isByMinute={isByMinute} />}
 
-            <button onClick={onFilterToday} className={`last-day-btn`}>
-                {yesterday === filterBy.startDate ? t('Since the oct 7') : t('Last 24h')}
+            {/* <button onClick={onFilterToday} className={`last-day-btn`}>
+                {yesterday === filterBy.startDate ? t('Last 24h') : t('Since the oct 7')}
+            </button> */}
+            <button onClick={onFilterToday} className={`last-day-btn ${filterBy.startDate === "2023-10-07" ? 'active' : ''}`}>
+                {t('Since the oct 7')}
             </button>
         </section>
     )
